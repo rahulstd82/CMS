@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+        }
+
+        header {
+            background: url('https://via.placeholder.com/1200x400') no-repeat center center/cover;
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(3, 87, 156, 0.803);
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #34495e;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-picture {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #3498db;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .profile-dropdown.visible {
+            display: block;
+        }
+
+        .profile-dropdown div {
+            padding: 0.8rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .profile-dropdown div:last-child {
+            border-bottom: none;
+        }
+
+        .profile-dropdown div:hover {
+            background: #f1f1f1;
+        }
+
+        .logout-btn {
+            color: #e74c3c;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-filter-section {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-filter-section input, .search-filter-section select {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-filter-section input:focus, .search-filter-section select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .search-filter-section button {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .search-filter-section button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .add-member-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in-out;
+            display: none; /* Initially hidden */
+        }
+
+        .add-member-section.visible {
+            display: block; /* Show when visible */
+        }
+
+        .add-member-section h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .add-member-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .add-member-section input, .add-member-section select {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-member-section input:focus, .add-member-section select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .add-member-section button {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .add-member-section button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .member-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .member-table th, .member-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .member-table th {
+            background: #3498db;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        .member-table tr {
+            transition: background 0.3s ease;
+        }
+
+        .member-table tr:hover {
+            background: #f1f1f1;
+            transform: scale(1.02);
+        }
+
+        .member-table td {
+            color: #2c3e50;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .search-filter-section {
+                flex-direction: column;
+            }
+
+            .member-table th, .member-table td {
+                padding: 0.8rem;
+            }
+        }
+
+        /* Additional Colors */
+        .toggle-add-member-btn {
+            background: #2ecc71;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-add-member-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        /* Login Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .modal-content button {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Member Details</h1>
+        <p>Manage and view all member details efficiently</p>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+        </div>
+        <div class="profile-container">
+            <img id="profilePicture" class="profile-picture" src="https://via.placeholder.com/40" alt="Profile Picture">
+            <div id="profileDropdown" class="profile-dropdown">
+                <div id="userName">John Doe</div>
+                <div id="userEmail">john@example.com</div>
+                <div class="logout-btn" onclick="logout()">Logout</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Button to toggle Add Member Section -->
+        <button class="toggle-add-member-btn" onclick="toggleAddMemberSection()">Add New Member</button>
+
+        <!-- Add Member Section -->
+        <div class="add-member-section fade-in">
+            <h2>Add New Member</h2>
+            <form id="addMemberForm">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="text" id="admissionNo" placeholder="Admission No." required>
+                <input type="text" id="mobileNo" placeholder="Mobile No." required>
+                <input type="email" id="email" placeholder="Email ID" required>
+                <input type="text" id="course" placeholder="Course" required>
+                <select id="year" required>
+                    <option value="">Select Year</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+                
+                <button type="submit">Add Member</button>
+            </form>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section fade-in">
+            <select id="filterAttribute">
+                <option value="">Select Filter Attribute</option>
+                <option value="name">Name</option>
+                <option value="admissionNo">Admission No.</option>
+                <option value="year">Year</option>
+                <option value="status">Status</option>
+            </select>
+            <input type="text" id="searchValue" placeholder="Enter search value">
+            <button onclick="searchAndFilter()">Search/Filter</button>
+        </div>
+
+        <!-- Member Table -->
+        <table class="member-table fade-in">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Name</th>
+                    <th>Admission No.</th>
+                    <th>Mobile No.</th>
+                    <th>Email ID</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="memberTableBody">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="loginName" placeholder="Name" required>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="text" id="loginProfilePicture" placeholder="Profile Picture URL" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            // Show login modal if user is not logged in
+            document.getElementById('loginModal').style.display = 'flex';
+        } else {
+            // Update profile picture and details
+            document.getElementById('profilePicture').src = user.profilePicture;
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        // Toggle profile dropdown
+        document.getElementById('profilePicture').addEventListener('click', function () {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('visible');
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const user = {
+                name: document.getElementById('loginName').value,
+                email: document.getElementById('loginEmail').value,
+                profilePicture: document.getElementById('loginProfilePicture').value,
+            };
+
+            // Save user data to localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Update UI
+            document.getElementById('profilePicture').src = user.profilePicture;
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+
+            // Hide login modal
+            document.getElementById('loginModal').style.display = 'none';
+        });
+
+        // Logout functionality
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.reload(); // Refresh the page to show the login modal
+        }
+
+        // Dummy Data (Replace with MongoDB Data)
+        let members = [
+            { sno: 1, name: "John Doe", admissionNo: "A12345", mobileNo: "9876543210", email: "john@example.com", course: "B.Tech", year: "1", status: "active" },
+            { sno: 2, name: "Jane Smith", admissionNo: "A12346", mobileNo: "9876543211", email: "jane@example.com", course: "B.Tech", year: "2", status: "inactive" },
+            { sno: 3, name: "Alice Johnson", admissionNo: "A12347", mobileNo: "9876543212", email: "alice@example.com", course: "B.Tech", year: "3", status: "active" },
+            { sno: 4, name: "Bob Brown", admissionNo: "A12348", mobileNo: "9876543213", email: "bob@example.com", course: "B.Tech", year: "4", status: "inactive" },
+        ];
+
+        // Function to populate the table
+        function populateTable(data) {
+            const tableBody = document.getElementById('memberTableBody');
+            tableBody.innerHTML = '';
+            data.forEach(member => {
+                const row = document.createElement('tr');
+                row.classList.add('slide-in');
+                row.innerHTML = `
+                    <td>${member.sno}</td>
+                    <td>${member.name}</td>
+                    <td>${member.admissionNo}</td>
+                    <td>${member.mobileNo}</td>
+                    <td>${member.email}</td>
+                    <td>${member.course}</td>
+                    <td>${member.year}</td>
+                    <td>${member.status}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to handle search and filter
+        function searchAndFilter() {
+            const filterAttribute = document.getElementById('filterAttribute').value;
+            const searchValue = document.getElementById('searchValue').value.toLowerCase();
+
+            let filteredMembers = members.filter(member => {
+                if (!filterAttribute || !searchValue) return true; // Show all if no filter is selected
+                return member[filterAttribute].toString().toLowerCase().includes(searchValue);
+            });
+
+            populateTable(filteredMembers);
+        }
+
+        // Function to add a new member
+        document.getElementById('addMemberForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const newMember = {
+                sno: members.length + 1,
+                name: document.getElementById('name').value,
+                admissionNo: document.getElementById('admissionNo').value,
+                mobileNo: document.getElementById('mobileNo').value,
+                email: document.getElementById('email').value,
+                course: document.getElementById('course').value,
+                year: document.getElementById('year').value,
+                
+            };
+
+            members.push(newMember);
+            populateTable(members);
+
+            // Clear the form
+            document.getElementById('addMemberForm').reset();
+        });
+
+        // Function to toggle the visibility of the Add Member Section
+        function toggleAddMemberSection() {
+            const addMemberSection = document.querySelector('.add-member-section');
+            addMemberSection.classList.toggle('visible');
+        }
+
+        // Initial table population
+        populateTable(members);
+    </script>
+</body>
+</html>
