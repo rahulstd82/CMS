@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+        }
+
+        header {
+            background: url('https://via.placeholder.com/1200x400') no-repeat center center/cover;
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(3, 87, 156, 0.803);
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #34495e;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        .login-btn {
+            background: #3498db;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            min-height: 1600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .button-grid {
+            display: grid;
+            min-height: 375px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .grid-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .grid-btn i {
+            font-size: 5rem;
+        }
+
+        .grid-btn:nth-child(2) { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .grid-btn:nth-child(3) { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .grid-btn:nth-child(4) { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .grid-btn:nth-child(5) { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .grid-btn:nth-child(6) { background: linear-gradient(135deg, #1abc9c, #16a085); }
+
+        .grid-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .account-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .account-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .account-info h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .account-info p {
+            margin: 1rem 0;
+            font-size: 1rem;
+            color: #34495e;
+        }
+
+        .account-info .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Club Management System</h1>
+        <p>Efficiently manage your club activities and members</p>
+    </header>
+
+    <nav>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#events">Events</a>
+        </div>
+        <a href="#account" class="login-btn" onclick="showAccount()">Account</a>
+    </nav>
+
+    <div class="container">
+        <div class="button-grid">
+            <button class="grid-btn">
+                <i class="fas fa-user-graduate"></i>
+                Student Details
+            </button>
+            <button class="grid-btn">
+                <i class="fas fa-project-diagram"></i>
+                Projects
+            </button>
+            <button class="grid-btn">
+                <i class="fas fa-users"></i>
+                Meetings
+            </button>
+            <button class="grid-btn">
+                <i class="fas fa-tasks"></i>
+                Tasks
+            </button>
+            <button class="grid-btn">
+                <i class="fas fa-calendar-alt"></i>
+                Events
+            </button>
+            <button class="grid-btn">
+                <i class="fas fa-calendar-day"></i>
+                Calendar
+            </button>
+        </div>
+    </div>
+
+    <!-- Account Information Modal -->
+    <div id="accountModal" class="account-modal">
+        <div class="account-info">
+            <h2>Your Account</h2>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Email:</strong> john.doe@example.com</p>
+            <p><strong>Membership:</strong> Active</p>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Show account information modal
+        function showAccount() {
+            document.getElementById('accountModal').style.display = 'flex';
+        }
+
+        // Hide account information modal
+        function hideAccount() {
+            document.getElementById('accountModal').style.display = 'none';
+        }
+
+        // Logout functionality
+        function logout() {
+            alert('You have been logged out.');
+            hideAccount();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('accountModal')) {
+                hideAccount();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            scroll-behavior: smooth;
+        }
+
+        /* Header and Navigation */
+        header {
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #34495e;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        .login-btn {
+            background: #3498db;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: #2c3e50;
+            transition: left 0.3s ease;
+            z-index: 1001;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 3rem;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #3498db;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        /* Announcement Section */
+        .announcement-section {
+            background: #fff;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .announcement-section h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .announcement-card {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .announcement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .announcement-card h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .announcement-card p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .announcement-card .date {
+            font-size: 0.8rem;
+            color: #3498db;
+            margin-top: 0.5rem;
+        }
+
+        .view-more-btn {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .view-more-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .content-section {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-section img {
+            width: 50%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section .text {
+            width: 50%;
+        }
+
+        .content-section h2 {
+            font-size: 5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .content-section p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        /* Dashboard Section */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card i {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-card p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        /* About Us Section */
+        .about-us {
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .about-us h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .about-us p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .social-media {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-media a {
+            color: #3498db;
+            font-size: 2rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-media a:hover {
+            transform: translateY(-5px);
+            color: #8e44ad;
+        }
+
+        /* Contact Us Section */
+        .contact-us {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .contact-us h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .contact-us p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-us form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .contact-us input, .contact-us textarea {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .contact-us button {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .contact-us button:hover {
+            background: #2980b9;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-section {
+                flex-direction: column;
+            }
+
+            .content-section img, .content-section .text {
+                width: 100%;
+            }
+
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#announcements">Announcements</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>Club Management System</h1>
+        <p>Efficiently manage your club activities and members</p>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact Us</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#announcements">Announcements</a>
+        </div>
+        <a href="#login" class="login-btn" onclick="showLogin()">Login</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="content-section fade-in">
+            <img src="https://media.istockphoto.com/id/1201620249/photo/excited-multiracial-students-pointing-up-at-copy-space.jpg?s=612x612&w=0&k=20&c=G6NdJepK_ASsAdttaL8Fn5f2P59UZiltWHW_WQNYzsI=" alt="Club Image">
+            <div class="text">
+                <h2>Welcome to Our Club</h2>
+                <p>
+                    The Club Management System is designed to help you manage your club activities, members, and events efficiently. Whether you're organizing meetings, managing tasks, or planning events, our system has got you covered.
+
+                    With an intuitive interface and powerful features, our system simplifies communication, enhances collaboration, and ensures smooth coordination among members. You can track attendance, assign responsibilities, and maintain records effortlessly. Automated notifications keep everyone informed about upcoming events, deadlines, and announcements.
+
+                    Our goal is to make club management seamless, allowing you to focus on what truly matters—building a strong, engaged community. Join us and experience hassle-free club administration!
+                </p>
+            </div>
+        </section>
+
+        <!-- Announcement Section -->
+        <section id="announcements" class="announcement-section fade-in">
+            <h2>Announcements</h2>
+            <div class="announcement-card">
+                <h3>New Event: Annual Club Meet</h3>
+                <p>Join us for the annual club meet on 25th October 2023. Don't miss out on the fun and networking opportunities!</p>
+                <div class="date">Posted on: 10th October 2023</div>
+            </div>
+            <div class="announcement-card">
+                <h3>Volunteers Needed</h3>
+                <p>We are looking for volunteers for the upcoming charity event. Sign up now to make a difference!</p>
+                <div class="date">Posted on: 5th October 2023</div>
+            </div>
+            <div class="announcement-card">
+                <h3>New Feature: Task Management</h3>
+                <p>We've added a new task management feature to help you organize your club activities better. Check it out!</p>
+                <div class="date">Posted on: 1st October 2023</div>
+            </div>
+            <button class="view-more-btn" onclick="window.location.href='announcements.html'">View More</button>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="dashboard fade-in">
+            <div class="dashboard-card">
+                <i class="fas fa-users"></i>
+                <h3>Clubs</h3>
+                <p>Explore and manage all the clubs in the system.</p>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Events</h3>
+                <p>Organize and track upcoming events.</p>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-tasks"></i>
+                <h3>Tasks</h3>
+                <p>Assign and monitor tasks for your team.</p>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="about-us fade-in">
+            <h2>About Us</h2>
+            <p>
+                We are a dedicated team passionate about helping clubs and organizations streamline their operations.
+                Our mission is to provide a user-friendly platform that simplifies club management and enhances collaboration.
+            </p>
+            <div class="social-media">
+                <a href="https://www.instagram.com/gtc_software_development_club?igsh=eTN0N2RlZGY2anA=" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/company/galgotiastechcouncil/posts/?feedView=all" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=gtcsoftwaredevelopmentclub@gmail.com&su=Inquiry&body=Hello,%20I%20would%20like%20to%20know%20more%20about%20the%20club." target="_blank">
+                    <i class="fas fa-envelope"></i>
+                  </a>
+                  
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact" class="contact-us fade-in">
+            <h2>Contact Us</h2>
+            <p>
+                Have questions or need support? Reach out to us! We're here to help.
+            </p>
+            <form>
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Show Login Modal (Placeholder)
+        function showLogin() {
+            alert("Redirecting to Login Page...");
+            window.location.href = "login.html";
+        }
+
+        // Fade-in Animation on Scroll
+        const sections = document.querySelectorAll('.fade-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
